@@ -1,0 +1,88 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.*;
+/**
+ * A string is said to be a special string if either of two conditions is met:
+
+ * - All of the characters are the same, e.g. aaa.
+ * - All characters except the middle one are the same, e.g. aadaa.
+ * A special substring is any substring of a string which meets one of those criteria. Given a string, determine how many special substrings can be formed from it.
+
+ * Example
+ * s=mnonopoo
+ * contains the following  special substrings: 
+ * {m,n,o,n,o,p,o,o,non,ono,opo,oo}
+ */
+public class Solution {
+
+    // Complete the substrCount function below.
+    static long substrCount(int n, String s) {
+        long counter = 0;
+        //add single characters to counts
+        counter+=n;
+        
+        int[] freqLeft = new int[n];
+        int[] freqRight = new int[n];
+        char[] sArray = s.toCharArray();
+        
+        //initialize frequency with 1
+        Arrays.fill(freqLeft, 1);
+        Arrays.fill(freqRight, 1);
+        
+        //Calculate frequency tables left and right
+        //Example: aabccc
+        //freqLeft= {1,2,1,1,2,3}
+        //freqRight= {1,2,3,1,1,2}
+        for(int i=0,j =n-1; i<n-1 ; i++,j--){
+            if(sArray[i]==sArray[i+1])
+                freqLeft[i+1]=freqLeft[i]+1;
+            if(sArray[j]==sArray[j-1])
+               freqRight[j-1]=freqRight[j]+1;     
+        }
+         
+        //continues indexes with the same character
+        //and edge case when all of the characters are the same
+        // form to calculate all the posibilities from the max frequency and remove the single digits: 
+        //(freq * (freq+1) / 2) - freq   
+        for(int i = 0; i<n; i++){
+             if((i+1<n && freqLeft[i]>freqLeft[i+1]) || (i==n-1 && freqLeft[i]>1))
+                counter+= (freqLeft[i]* (freqLeft[i]+1)/2) - freqLeft[i] ;  
+        }
+        
+        //count the ones where the midle is different
+        //get the min frequency and that is the amount of strings that can be formed
+        for(int i = 1; i<n-1; i++){
+            if(sArray[i-1]==sArray[i+1] && sArray[i-1]!=sArray[i])
+                counter+= Math.min(freqLeft[i-1],freqRight[i+1]);
+        }
+    
+        return counter;
+    }
+    
+    
+    
+
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) throws IOException {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        int n = scanner.nextInt();
+        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+
+        String s = scanner.nextLine();
+
+        long result = substrCount(n, s);
+
+        bufferedWriter.write(String.valueOf(result));
+        bufferedWriter.newLine();
+
+        bufferedWriter.close();
+
+        scanner.close();
+    }
+}
