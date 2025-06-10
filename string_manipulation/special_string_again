@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.regex.*;
 /**
+ * https://www.hackerrank.com/challenges/special-palindrome-again/problem
  * A string is said to be a special string if either of two conditions is met:
 
  * - All of the characters are the same, e.g. aaa.
