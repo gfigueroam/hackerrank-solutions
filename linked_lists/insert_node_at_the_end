@@ -1,0 +1,31 @@
+    
+
+    // Complete the insertNodeAtTail function below.
+
+    /*
+     * https://www.hackerrank.com/challenges/insert-a-node-at-the-tail-of-a-linked-list/problem 
+     * For your reference:
+     *
+     * SinglyLinkedListNode {
+     *     int data;
+     *     SinglyLinkedListNode next;
+     * }
+     *
+     */
+    static SinglyLinkedListNode insertNodeAtTail(SinglyLinkedListNode head, int data) {
+        //create the new node
+        if(head == null){
+            SinglyLinkedListNode node = new SinglyLinkedListNode(data);
+            return node;
+        }
+        //if the head.next is null, I will insert the new node there
+        if(head.next == null)
+            head.next = insertNodeAtTail(head.next, data);
+        //move to the next    
+        else    
+            insertNodeAtTail(head.next, data);
+        return head;
+    }
+    
+    
+
