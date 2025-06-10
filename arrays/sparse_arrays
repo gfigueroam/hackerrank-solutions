@@ -12,7 +12,8 @@ import static java.util.stream.Collectors.toList;
 
 class Result {
 
-    /*
+    /* 
+     * https://www.hackerrank.com/challenges/sparse-arrays/problem
      * Complete the 'matchingStrings' function below.
      *
      * The function is expected to return an INTEGER_ARRAY.
