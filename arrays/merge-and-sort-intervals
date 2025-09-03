@@ -1,0 +1,98 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+
+
+class Result {
+
+    /*
+     * Complete the 'mergeHighDefinitionIntervals' function below.
+     *
+     * The function is expected to return a 2D_INTEGER_ARRAY.
+     * The function accepts 2D_INTEGER_ARRAY intervals as parameter.
+     * Merge and Sort Intervals
+     * Given an array of intervals [startTime, endTime], 
+     * merge all overlapping intervals and return a sorted array of non-overlapping intervals.
+     * solution: sort intervals by start date,
+     * then check if the end of the first is smaller than the start of the second, then merge them both
+     * to merge you get the min of the start and the max of the end.
+     */
+
+      public static List<List<Integer>> mergeHighDefinitionIntervals(List<List<Integer>> intervals) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(intervals.isEmpty())
+            return result;
+
+        //sort by smallest start interval
+        intervals.sort((a,b)-> a.get(0) -b.get(0));
+
+        List<Integer> merged = intervals.get(0);
+
+        for(int i =1; i < intervals.size(); i++) {
+            if(overlap(merged, intervals.get(i))) {
+                merged = merge(merged, intervals.get(i));
+            } else {
+                result.add(merged);
+                merged = intervals.get(i);
+            }
+        }
+        result.add(merged);
+
+        return result;
+    }
+
+    private static boolean overlap (List<Integer> a, List<Integer> b){
+        //if the end if the first is bigger than the start of the second interval
+        return a.get(1) >= b.get(0);
+    }
+
+    private static List<Integer> merge (List<Integer> a, List<Integer> b){
+        return Arrays.asList(Math.min(a.get(0), b.get(0)), Math.max(a.get(1), b.get(1)));
+    }
+
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+        int intervalsRows = Integer.parseInt(bufferedReader.readLine().trim());
+        int intervalsColumns = Integer.parseInt(bufferedReader.readLine().trim());
+
+        List<List<Integer>> intervals = new ArrayList<>();
+
+        IntStream.range(0, intervalsRows).forEach(i -> {
+            try {
+                intervals.add(
+                    Stream.of(bufferedReader.readLine().replaceAll("\\s+$", "").split(" "))
+                        .map(Integer::parseInt)
+                        .collect(toList())
+                );
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        List<List<Integer>> result = Result.mergeHighDefinitionIntervals(intervals);
+
+        result.stream()
+            .map(
+                r -> r.stream()
+                    .map(Object::toString)
+                    .collect(joining(" "))
+            )
+            .collect(toList())
+            .forEach(System.out::println);
+
+        bufferedReader.close();
+    }
+}
