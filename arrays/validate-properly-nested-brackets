@@ -22,7 +22,7 @@ class Result {
      * Validate Properly Nested Brackets
      * Given a string, check if all brackets ('()', '{}', '[]') are properly matched and nested. 
      * Return 1 if valid, otherwise return 0.
-     * Solution: using an stack to store the oping brackts and pop them whe the closing shows up.
+     * Solution: using an stack to store the oping brackts and pop them whe the closing shows
      */
 
     public static boolean areBracketsProperlyMatched(String code_snippet) {
@@ -41,6 +41,8 @@ class Result {
             if(opening.indexOf(c)>-1)
                 stack.push(c);
             else if((i = closing.indexOf(c)) > -1) {
+                if(stack.empty())
+                    return false;
                char open = stack.pop();   
                if(opening.indexOf(open)!= i)
                 return false;            
