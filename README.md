@@ -1,2 +1,2 @@
 # HackerRank
-Solving HackerRank problems
+Solving HackerRank problems using Java 21
