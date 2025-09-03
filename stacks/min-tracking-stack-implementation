@@ -1,0 +1,86 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+
+
+class Result {
+
+    /*
+     * Complete the 'processCouponStackOperations' function below.
+     *
+     * The function is expected to return an INTEGER_ARRAY.
+     * The function accepts STRING_ARRAY operations as parameter.
+     * Min-Tracking Stack Implementation
+     * Implement a stack that supports push, pop, top, and getMin operations in O(1) time, 
+     * where getMin returns the minimum element.
+     * Solution: having an stack to store the numbers as they are push and another 
+     * type prefix min, where the smaller number till then will be stored.
+     */
+
+    public static List<Integer> processCouponStackOperations(List<String> operations) {
+        List<Integer> result= new ArrayList<>();
+        Stack<Integer> stack = new Stack<>();
+        Stack<Integer> min = new Stack<>();
+        
+        for(String op: operations){
+            if(op.contains("push")){
+                int num = Integer.valueOf(op.replaceAll("[^0-9]", ""));
+                stack.push(num);
+                if(min.empty())
+                    min.push(num);
+                else {
+                    int exisingMin = min.peek();
+                    if (exisingMin <= num)
+                        min.push(exisingMin);   
+                    else 
+                        min.push(num);
+                }   
+            } else if(op.equals("pop")){
+                stack.pop();
+                min.pop();
+            } else if(op.equals("top")){
+                result.add(stack.peek());
+            } else if (op.equals("getMin")){
+                result.add(min.peek());
+            }
+        }
+        return result;
+    }
+
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+        int operationsCount = Integer.parseInt(bufferedReader.readLine().trim());
+
+        List<String> operations = IntStream.range(0, operationsCount).mapToObj(i -> {
+            try {
+                return bufferedReader.readLine();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        })
+            .collect(toList());
+
+        List<Integer> result = Result.processCouponStackOperations(operations);
+
+        System.out.println(
+            result.stream()
+                .map(Object::toString)
+                .collect(joining("\n"))
+        );
+
+        bufferedReader.close();
+    }
+}
