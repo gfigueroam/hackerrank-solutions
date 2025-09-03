@@ -1,0 +1,59 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+
+
+class Result {
+
+    /*
+     * Complete the 'isAlphabeticPalindrome' function below.
+     *
+     * The function is expected to return a BOOLEAN.
+     * The function accepts STRING code as parameter.
+     *
+     * Check Palindrome by Filtering Non-Letters
+     * Given a string containing letters, digits, and symbols, determine if it reads the same forwards and 
+     * backwards when considering only alphabetic characters (case-insensitive).
+     *
+     * Solution: first remove all the characters which are not letters from the string.
+     * Then using the 2 pointers technique check if the resulting string is a palindrome
+     */
+
+    public static boolean isAlphabeticPalindrome(String code) {
+        //Remove digits and special characters
+        code = code.replaceAll("[^a-zA-Z]", ""); // "\\P{L}"
+        //convert to lower case
+        code = code.toLowerCase();
+        
+        for(int i=0, j=code.length()-1; i<j; i++, j--){
+            if(code.charAt(i)!= code.charAt(j))
+                return false;
+        }
+        
+        return true;
+    }
+
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+        String code = bufferedReader.readLine();
+
+        boolean result = Result.isAlphabeticPalindrome(code);
+
+        System.out.println(result ? 1 : 0);
+
+        bufferedReader.close();
+    }
+}
