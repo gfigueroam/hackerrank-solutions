@@ -1,0 +1,81 @@
+
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+
+
+class Result {
+
+    /*
+     * Complete the 'maximizeNonOverlappingMeetings' function below.
+     *
+     * The function is expected to return an INTEGER.
+     * The function accepts 2D_INTEGER_ARRAY meetings as parameter.
+     * Maximum Number of Non-Overlapping Intervals
+     * Given an array of intervals where each interval has a start and end time, 
+     * return the maximum number of non-overlapping intervals.
+     * Solution: first sort the intervals to identify which ones overlap
+     * iterate in all the intervals and compare the end of the first with the start of the last
+     * if the end is smaller or equal that the end, they do not overlap and we can increase the counter
+     */
+
+    public static int maximizeNonOverlappingMeetings(List<List<Integer>> meetings) {
+        if(meetings.isEmpty())
+            return 0;
+        //sort intervals by end time
+        meetings.sort((a,b)-> a.get(1)- b.get(1)); // [1,2] [2,3] 1-2
+        int count = 0;
+        int j=0;
+        
+        //iterate in all the intervals and compare the end of the first with the start of the second 
+        for(int i =1; i<meetings.size(); i++){
+            List<Integer> a= meetings.get(j);
+            List<Integer> b= meetings.get(i);
+            
+            //This is continues
+            if(a.get(1) <= b.get(0)) {
+                count++;
+                j = i;
+            }   
+        }
+        return count+1;
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+        int meetingsRows = Integer.parseInt(bufferedReader.readLine().trim());
+        int meetingsColumns = Integer.parseInt(bufferedReader.readLine().trim());
+
+        List<List<Integer>> meetings = new ArrayList<>();
+
+        IntStream.range(0, meetingsRows).forEach(i -> {
+            try {
+                meetings.add(
+                    Stream.of(bufferedReader.readLine().replaceAll("\\s+$", "").split(" "))
+                        .map(Integer::parseInt)
+                        .collect(toList())
+                );
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        int result = Result.maximizeNonOverlappingMeetings(meetings);
+
+        System.out.println(result);
+
+        bufferedReader.close();
+    }
+}
