@@ -1,0 +1,138 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+class SinglyLinkedListNode {
+    public int data;
+    public SinglyLinkedListNode next;
+
+    public SinglyLinkedListNode(int nodeData) {
+        this.data = nodeData;
+        this.next = null;
+    }
+}
+
+class SinglyLinkedList {
+    public SinglyLinkedListNode head;
+    public SinglyLinkedListNode tail;
+
+    public SinglyLinkedList() {
+        this.head = null;
+        this.tail = null;
+    }
+
+    public void insertNode(int nodeData) {
+        SinglyLinkedListNode node = new SinglyLinkedListNode(nodeData);
+
+        if (this.head == null) {
+            this.head = node;
+        } else {
+            this.tail.next = node;
+        }
+
+        this.tail = node;
+    }
+}
+
+class SinglyLinkedListPrintHelper {
+    public static void printList(SinglyLinkedListNode node, String sep) {
+        while (node != null) {
+            System.out.print(node.data);
+
+            node = node.next;
+
+            if (node != null) {
+                System.out.print(sep);
+            }
+        }
+    }
+}
+
+
+
+class Result {
+
+    /*
+     * Complete the 'removeKthNodeFromEnd' function below.
+     *
+     * The function is expected to return an INTEGER_SINGLY_LINKED_LIST.
+     * The function accepts following parameters:
+     *  1. INTEGER_SINGLY_LINKED_LIST head
+     *  2. INTEGER k
+     */
+
+    /*
+     * For your reference:
+     *
+     * SinglyLinkedListNode {
+     *     int data;
+     *     SinglyLinkedListNode next;
+     * }
+     
+     * One-Pass Removal of k-th Node from End
+     * Given the head of a singly linked list and an integer k, 
+     * remove the k-th node from the end in one traversal and return the new head. 
+     * If k is invalid, return the original list.
+     * Solution: recursively go to the end of the linked list (next=null) and 
+     * then going back check when the target index is found.
+     * If the target index is found remove that node returing current.next as a valid node to linked.
+     */
+     
+    private static int counter=-1;
+    private static boolean endFound=false;
+
+    public static SinglyLinkedListNode removeKthNodeFromEnd(SinglyLinkedListNode head, int k) {
+        if(head == null) {
+            endFound = true;
+            return null;
+        } 
+        head.next = removeKthNodeFromEnd(head.next, k);
+        
+        if(endFound)
+            counter++;
+        if(counter == k) //remove the node
+            return head.next;
+        return head;
+
+    }
+    
+
+
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+        SinglyLinkedList head = new SinglyLinkedList();
+
+        int headCount = Integer.parseInt(bufferedReader.readLine().trim());
+
+        IntStream.range(0, headCount).forEach(i -> {
+            try {
+                int headItem = Integer.parseInt(bufferedReader.readLine().trim());
+
+                head.insertNode(headItem);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        int k = Integer.parseInt(bufferedReader.readLine().trim());
+
+        SinglyLinkedListNode result = Result.removeKthNodeFromEnd(head.head, k);
+
+        SinglyLinkedListPrintHelper.printList(result, "\n");
+        System.out.println();
+
+        bufferedReader.close();
+    }
+}
