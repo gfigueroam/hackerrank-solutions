@@ -1,0 +1,82 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+
+
+class Result {
+
+    /*
+     * Complete the 'countAffordablePairs' function below.
+     *
+     * The function is expected to return an INTEGER.
+     * The function accepts following parameters:
+     *  1. INTEGER_ARRAY prices
+     *  2. INTEGER budget
+     *
+     * Solution: O(nlogn)using 2pointers technique
+     */
+
+    public static int countAffordablePairs(List<Integer> prices, int budget) {
+    // Write your code here
+    //Remove all the elements where the price is bigger than the budget
+        //prices.removeIf(price-> price > budget);
+        if(prices.isEmpty())
+            return 0;
+            
+
+        int counter = 0;
+        int start = 0;
+        int end = prices.size()-1 ;
+        
+        //System.out.println(start+ "- "+ end+ "-" + budget);
+        
+        while(start <= end) {
+            if(prices.get(start) + prices.get(end) <= budget && start!= end) {
+                //System.out.println(start+ "- "+ end+ "-");
+                counter++;
+                start++;
+            } else {
+                start = 0;
+                end--;
+            }
+        }
+        return counter;
+    }
+
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+        int pricesCount = Integer.parseInt(bufferedReader.readLine().trim());
+
+        List<Integer> prices = IntStream.range(0, pricesCount).mapToObj(i -> {
+            try {
+                return bufferedReader.readLine().replaceAll("\\s+$", "");
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        })
+            .map(String::trim)
+            .map(Integer::parseInt)
+            .collect(toList());
+
+        int budget = Integer.parseInt(bufferedReader.readLine().trim());
+
+        int result = Result.countAffordablePairs(prices, budget);
+
+        System.out.println(result);
+
+        bufferedReader.close();
+    }
+}
